@@ -1,0 +1,305 @@
+{
+  "swagger": "2.0",
+  "info": {
+      "version": "3.0.0",
+      "title": "API EVAL"
+  },
+  "host": "localhost:3000",
+  "basePath": "/",
+  "tags": [
+      {
+          "name": "Évaluation - Backend"
+      }
+  ],
+  "schemes": ["http"],
+  "securityDefinitions": {
+      "Bearer": {
+          "type": "apiKey",
+          "name": "Autorization",
+          "in": "header",
+          "description": "Entrez le token avec le préfixe 'Bearer'"
+      }
+  },
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "paths": {
+      "/api/auth/signup": {
+          "post": {
+              "tags": ["User"],
+              "summary": "Créé un utilisateur",
+              "parameters": [
+                  {
+                      "name": "email",
+                      "in": "body",
+                      "required": true,
+                      "description": "Adresse e-mail de l'utilisateur : `req.body.email`",
+                      "type": "string"
+                  },
+                  {
+                      "name": "password",
+                      "in": "body",
+                      "required": true,
+                      "description": "Mot de passe de l'utilisateur : `req.body.password`",
+                      "type": "string"
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "Utilisateur enregistré",
+                      "schema": {
+                          "$ref": "#/definitions/User"
+                      }
+                  },
+                  "400": {
+                      "description": "Erreur de création d'utilisateur  "
+                  }
+              },
+              "produces": [
+                  "application/json"
+              ]
+          }
+      },
+      "/api/auth/login": {
+          "post": {
+              "tags": ["User"],
+              "summary": "Se connecter à un utilisateur",
+              "parameters": [
+                  {
+                      "name": "email",
+                      "in": "body",
+                      "required": true,
+                      "description": "Adresse e-mail de l'utilisateur : - `req.body.email`",
+                      "type": "string"
+                  },
+                  {
+                      "name": "password",
+                      "in": "body",
+                      "required": true,
+                      "description": "Mot de passe de l'utilisateur : `req.body.password`",
+                      "type": "string"
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "Utilisateur authentifié",
+                      "schema": {
+                          "$ref": "#/definitions/User"
+                      }
+                  },
+                  "400": {
+                      "description": "Utilisateur pas authentifié"
+                  }
+              },
+              "produces": [
+                  "application/json"
+              ]
+          }
+      },
+      "/api/perso": {
+          "post": {
+              "tags": ["Perso"],
+              "summary": "Créer un personnage",
+              "parameters": [
+                  {
+                      "name": "pseudo",
+                      "in": "body",
+                      "required": true,
+                      "description": "Pseudo du personnage : `req.body.pseudo`",
+                      "type": "string"
+                  },
+                  {
+                      "name": "class",
+                      "in": "body",
+                      "required": true,
+                      "description": "Classe du personnage : `req.body.class`",
+                      "type": "string"
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "Personnage créé",
+                      "schema": {
+                          "$ref": "#/definitions/User"
+                      }
+                  },
+                  "400": {
+                      "description": "Le personnage n'a pas été créé"
+                  },
+                  "401": {
+                      "description": "Pseudo/classe déjà utilisés par l'utilisateur"
+                  }
+              },
+              "produces": [
+                  "application/json"
+              ]
+          }
+      },
+      "/api/perso/{pseudo}/{class}": {
+          "get": {
+              "tags": ["Perso"],
+              "summary": "Aficher les informations d'un personnage",
+              "parameters": [
+                  {
+                      "name": "pseudo",
+                      "in": "path",
+                      "required": true,
+                      "description": "Pseudo du personnage : `req.params.pseudo`",
+                      "type": "string"
+                  },
+                  {
+                      "name": "class",
+                      "in": "path",
+                      "required": true,
+                      "description": "Classe du personnage : `req.params.class`",
+                      "type": "string"
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "Retourne des donné d'un perso",
+                      "schema": {
+                          "$ref": "#/definitions/Perso"
+                      }
+                  },
+                  "400": {
+                      "description": "Erreur retournée par l'API"
+                  }
+              }
+          }
+      },
+      "/api/perso/{id}": {
+          "parameters": [
+              {
+                  "name": "id",
+                  "in": "path",
+                  "required": true,
+                  "description": "Identifiant du personnage : `req.params.id`",
+                  "type": "string"
+              }
+          ],
+          "get": {
+              "tags": ["Perso"],
+              "summary": "Lister les informations d'un personnage",
+              "responses": {
+                  "200": {
+                      "description": "Retourne des donné d'un perso",
+                      "schema": {
+                          "$ref": "#/definitions/Character"
+                      }
+                  },
+                  "400": {
+                      "description": "Erreur retournée par l'API"
+                  }
+              }
+          },
+          "put": {
+              "tags": ["Perso"],
+              "summary": "Modifier un personnage",
+              "security": [
+                  {
+                      "Bearer": []
+                  }
+              ],
+              "parameters": [
+                  {
+                      "name": "pseudo",
+                      "in": "body",
+                      "description": "Pseudo du personnage : `req.body.pseudo`",
+                      "type": "string"
+                  },
+                  {
+                      "name": "class",
+                      "in": "body",
+                      "description": "Classe du personnage : `req.body.class`",
+                      "type": "string"
+                  },
+                  {
+                      "name": "level",
+                      "in": "body",
+                      "description": "Niveau du personnage : `req.body.level`",
+                      "type": "number"
+                  },
+                  {
+                      "name": "userId",
+                      "in": "body",
+                      "description": "Identifiant de l'utilisateur du personnage : `req.body.userId`",
+                      "type": "string"
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "Personnage modifié",
+                      "schema": {
+                          "$ref": "#/definitions/Perso"
+                      }
+                  },
+                  "400": {
+                      "description": "Personnage inexistant"
+                  },
+                  "401": {
+                      "description": "Ce n'est pas le personnage de l'utilisateur"
+                  }
+              },
+              "produces": [
+                  "application/json"
+              ]
+          },
+          "delete": {
+              "tags": ["Perso"],
+              "summary": "Supprimer un personnage",
+              "security": [
+                  {
+                      "Bearer": []
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "Personnage supprimé",
+                      "schema": {
+                          "$ref": "#/definitions/Perso"
+                      }
+                  },
+                  "400": {
+                      "description": "Personnage inexistant"
+                  },
+                  "401": {
+                      "description": "Ce n'est pas le personnage de l'utilisateur"
+                  }
+              },
+              "produces": [
+                  "application/json"
+              ]
+          }
+      }
+  },
+  "definitions": {
+      "User": {
+          "required": ["email", "password"],
+          "properties": {
+              "email": {
+                  "type": "string"
+              },
+              "password": {
+                  "type": "string"
+              }
+          }
+      },
+      "Perso": {
+          "required": ["pseudo", "class", "level", "userId"],
+          "properties": {
+              "pseudo": {
+                  "type": "string"
+              },
+              "class": {
+                  "type": "string"
+              },
+              "level": {
+                  "type": "number"
+              },
+              "userId": {
+                  "type": "string"
+              }
+          }
+      }
+  }
+}
